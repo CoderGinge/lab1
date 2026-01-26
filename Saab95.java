@@ -1,50 +1,19 @@
 import java.awt.*;
 
-public class Saab95{
+//Saab95 is a special type of Car that has a turbo, which has to be handled separately
+public class Saab95 extends Car{
 
-    public boolean turboOn;
-    public int nrDoors; // Number of doors on the car
-    public double enginePower; // Engine power of the car
-    public double currentSpeed; // The current speed of the car
-    public Color color; // Color of the car
-    public String modelName; // The car model name
-    
+    // Keeps track of whether turbo is on or off.
+    // It is protected so that it can be used by subclasses, but can't be accessed directly by the user
+    protected boolean turboOn;
+
+    //Constructor that calls the constructor of the base class
     public Saab95(){
-        nrDoors = 2;
-        color = Color.red;
-        enginePower = 125;
+        super(2, Color.red, 125, "Saab95");
 	    turboOn = false;
-        modelName = "Saab95";
-        stopEngine();
-    }
-    
-    public int getNrDoors(){
-        return nrDoors;
-    }
-    public double getEnginePower(){
-        return enginePower;
     }
 
-    public double getCurrentSpeed(){
-        return currentSpeed;
-    }
-
-    public Color getColor(){
-        return color;
-    }
-
-    public void setColor(Color clr){
-	    color = clr;
-    }
-
-    public void startEngine(){
-	    currentSpeed = 0.1;
-    }
-
-    public void stopEngine(){
-	    currentSpeed = 0;
-    }
-
+    //Public methods to turn the turbo on or off
     public void setTurboOn(){
 	    turboOn = true;
     }
@@ -52,28 +21,13 @@ public class Saab95{
     public void setTurboOff(){
 	    turboOn = false;
     }
-    
-    public double speedFactor(){
+
+    //Saab95's specific implementation of speedFactor, which takes the turbo into account
+    //Overrides the abstract method in the base class
+    @Override
+    protected double speedFactor(){
         double turbo = 1;
         if(turboOn) turbo = 1.3;
         return enginePower * 0.01 * turbo;
-    }
-
-    public void incrementSpeed(double amount){
-        currentSpeed = getCurrentSpeed() + speedFactor() * amount;
-    }
-
-    public void decrementSpeed(double amount){
-        currentSpeed = getCurrentSpeed() - speedFactor() * amount;
-    }
-    
-    // TODO fix this method according to lab pm
-    public void gas(double amount){
-        incrementSpeed(amount);
-    }
-
-    // TODO fix this method according to lab pm
-    public void brake(double amount){
-        decrementSpeed(amount);
     }
 }
