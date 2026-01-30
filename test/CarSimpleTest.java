@@ -53,3 +53,7 @@ public class CarSimpleTest {
     //testing to see if amount outside our index works or not. (It should not)
 }
 
+//JUnit is used to automatically confirm behavior.
+//It is good in order to keep building the test without ruining anything.
+//Also to see if everything is correct, the coverage system shows effectively where the problem is
+//JUnit works as documentation and tests on the side
