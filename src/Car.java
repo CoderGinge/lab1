@@ -61,6 +61,7 @@ public abstract class Car implements Movable {
 
     //Starts the engine and sets a minimal initial speed
     public void startEngine(){
+        if (!canDrive()){return;} // kontrollerar att fordonet får starta motorn, och där med öka hatighet
         currentSpeed = 0.1;
     }
 
@@ -68,6 +69,9 @@ public abstract class Car implements Movable {
     public void stopEngine(){
         currentSpeed = 0;
     }
+
+    //Returns true by default. Subclasses can override this method to restrict when the vehicle is allowed to drive.
+    protected boolean canDrive() { return true; }
 
     //Abstract method implemented by the subclasses to determine their specific speedFactor
     protected abstract double speedFactor();
@@ -82,14 +86,13 @@ public abstract class Car implements Movable {
         currentSpeed = Math.max(getCurrentSpeed() - speedFactor() * amount,0); // lägsta hastighet är 0 
     }
 
-    // TODO fix this method according to lab pm
      public void gas(double amount){
-        if (amount >= 0 && amount <= 1){    // kontrollerat att amount>=0 OCH <=1 
+        if (amount >= 0 && amount <= 1){ // kontrollerat att amount>=0 OCH <=1
+            if (!canDrive()){return;} // kontrollerar att fordonet får köra
             incrementSpeed(amount);
         }
     }
 
-    // TODO fix this method according to lab pm
     public void brake(double amount){
         if (amount >= 0 && amount <= 1){
             decrementSpeed(amount);
