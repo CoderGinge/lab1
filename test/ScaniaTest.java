@@ -64,4 +64,29 @@ public class ScaniaTest {
         assertEquals(0.45, scania.getCurrentSpeed(), EPS);
     }
 
+    @Test
+    public void raiseTruckBedDoesNothingForNegativeAmount() {
+        Scania scania = new Scania();
+        scania.raiseTruckBed(-10);
+        assertEquals(0, scania.getTruckBedAngle(), EPS);
+    }
+
+    @Test
+    public void lowerTruckBedDoesNothingForNegativeAmount() {
+        Scania scania = new Scania();
+        scania.raiseTruckBed(20);
+        scania.lowerTruckBed(-10);
+        assertEquals(20, scania.getTruckBedAngle(), EPS);
+    }
+
+    @Test
+    public void lowerTruckBedDoesNothingWhileMoving() {
+        Scania scania = new Scania();
+        scania.raiseTruckBed(0);   // ingen skillnad, men tydligt
+        scania.gas(0.5);           // nu rör den sig
+        scania.lowerTruckBed(10);  // ska ignoreras pga speed != 0
+        assertEquals(0, scania.getTruckBedAngle(), EPS);
+    }
+
+
 }

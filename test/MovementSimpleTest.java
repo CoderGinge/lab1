@@ -18,7 +18,7 @@ public class MovementSimpleTest {
         assertTrue(car.y > yBefore);
     }
     //testing to see if the car moves
-    //the car starts with direction NORTH so this is the easiest check
+    //the car starts with direction NORTH so this is an easy check
 
     @Test
     public void turnLeftAndRightChangesDirection() {
@@ -60,58 +60,6 @@ public class MovementSimpleTest {
         car.move();
         assertTrue(car.x < x3);
     }
-    //testing to see if they work together, we can see if x is changing also
-
-    @Test
-    public void turnLeft_coversAllCases() {
-        Car car = new Volvo240();
-
-        // NORTH -> WEST
-        car.direction = Car.Directions.NORTH;
-        car.turnLeft();
-        assertEquals(Car.Directions.WEST, car.direction);
-
-        // WEST -> SOUTH
-        car.direction = Car.Directions.WEST;
-        car.turnLeft();
-        assertEquals(Car.Directions.SOUTH, car.direction);
-
-        // SOUTH -> EAST
-        car.direction = Car.Directions.SOUTH;
-        car.turnLeft();
-        assertEquals(Car.Directions.EAST, car.direction);
-
-        // EAST -> NORTH
-        car.direction = Car.Directions.EAST;
-        car.turnLeft();
-        assertEquals(Car.Directions.NORTH, car.direction);
-    }
-    //full coverage
-
-    @Test
-    public void turnRight_coversAllCases() {
-        Car car = new Volvo240();
-
-        // NORTH -> EAST
-        car.direction = Car.Directions.NORTH;
-        car.turnRight();
-        assertEquals(Car.Directions.EAST, car.direction);
-
-        // EAST -> SOUTH
-        car.direction = Car.Directions.EAST;
-        car.turnRight();
-        assertEquals(Car.Directions.SOUTH, car.direction);
-
-        // SOUTH -> WEST
-        car.direction = Car.Directions.SOUTH;
-        car.turnRight();
-        assertEquals(Car.Directions.WEST, car.direction);
-
-        // WEST -> NORTH
-        car.direction = Car.Directions.WEST;
-        car.turnRight();
-        assertEquals(Car.Directions.NORTH, car.direction);
-    }
-    //full coverage
+    //testing to see if x and y changes in both directions
 
 }

@@ -44,5 +44,5 @@ public class CarTurnCoverageTest {
         car.turnRight();
         assertEquals(Car.Directions.NORTH, car.direction);
     }
-    //full coverage, similar to movement tests (all cases)
+    //full coverage, all directions
 }

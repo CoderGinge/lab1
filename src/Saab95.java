@@ -14,13 +14,9 @@ public class Saab95 extends Car{
     }
 
     //Public methods to turn the turbo on or off
-    public void setTurboOn(){
-	    turboOn = true;
-    }
+    public void setTurboOn() { turboOn = true; }
 
-    public void setTurboOff(){
-	    turboOn = false;
-    }
+    public void setTurboOff() { turboOn = false; }
 
     //Saab95's specific implementation of speedFactor, which takes the turbo into account
     //Overrides the abstract method in the base class
