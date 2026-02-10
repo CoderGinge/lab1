@@ -9,11 +9,13 @@ public class Workshop<T extends Car> {
         this.inside= new ArrayList<>();
     }
 
-    public void addCar (T car) {
+    public boolean addCar (T car) {
         if (inside.size()<capacity){
             inside.add(car);
+            return true;
         }
-        else System.out.println("The workshop is full");
+        else 
+            return false;
     }
 
     public T takeCarOut(T car){
@@ -21,8 +23,8 @@ public class Workshop<T extends Car> {
             inside.remove(car);
             return car;
         }
-        else System.out.println("The car is not in the workshop");
-        return null;
+        else
+            return null;
 
     }
 
