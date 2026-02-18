@@ -137,6 +137,12 @@ public abstract class Vehicle implements Movable {
     public void setX(double x) { this.x = x; }
     public void setY(double y) { this.y = y; }
 
+    public enum Action {
+        TURBO_ON, TURBO_OFF, LIFT_BED, LOWER_BED
+    }
+
+    public void perform(Action action) { }
+
 }
 
    

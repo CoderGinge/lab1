@@ -26,4 +26,13 @@ public class Saab95 extends Car{
         if(turboOn) turbo = 1.3;
         return enginePower * 0.01 * turbo;
     }
+    @Override
+    public void perform(Action action) {
+        switch (action) {
+            case TURBO_ON -> setTurboOn();
+            case TURBO_OFF -> setTurboOff();
+            default -> {}
+        }
+    }
+
 }

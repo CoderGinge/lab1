@@ -129,24 +129,23 @@ public class CarController {
     }
 
     void turboOn() {
-        for (Vehicle car : cars)
-            if (car instanceof Saab95 saab) saab.setTurboOn();
+        for (Vehicle car : cars) car.perform(Vehicle.Action.TURBO_ON);
     }
 
     void turboOff() {
-        for (Vehicle car : cars)
-            if (car instanceof Saab95 saab) saab.setTurboOff();
+        for (Vehicle car : cars) car.perform(Vehicle.Action.TURBO_OFF);
     }
 
     void liftBed() {
-        for (Vehicle car : cars)
-            if (car instanceof Scania scania) scania.raiseTruckBed(10);
+        for (Vehicle car : cars) car.perform(Vehicle.Action.LIFT_BED);
     }
 
     void lowerBed() {
-        for (Vehicle car : cars)
-            if (car instanceof Scania scania) scania.lowerTruckBed(10);
+        for (Vehicle car : cars) car.perform(Vehicle.Action.LOWER_BED);
     }
+
+  
+
 }
 
 
