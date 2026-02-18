@@ -1,0 +1,123 @@
+// 
+Q2
+
+Open/Closed Principle
+
++ Vehicle- hierarkin följer OCP:
+man kan lägga till nya fordonstyper utan att ändra Vehicle eller andra bilklasser.
+CarController använder instanceof Volvo240 för att avgöra om bilen får lastas.
+Detta är ett mindre OCP-brott, men acceptabelt eftersom verkstaden är specialiserad.
+Förbättring:
+Man skulle kunna införa ett interface som Loadable eller WorkshopEligible.
+
+-------------------------------------------------------------------------------
+
+Interface Segregation Principle
++ Movable är ett bra, litet interface som följer ISP.
+- Det finns implicit funktionalitet (turbo, flak, lastning) som hade kunnat brytas ut i egna interfaces:
+- TurboCar
+- TruckBed
+- Loadable
+Det hade minskat behovet av specialfall och gjort controller ännu renare.
+
+-------------------------------------------------------------------------------
+
+
+High Cohesion / Low Coupling
+Cohesion
+Hög cohesion:
+- Vehicle / Car / Truck / Saab95 / Volvo240 / Scania
+→ modellerar fordon och deras beteenden
+- Workshop<T>
+→ lagrar bilar
+- DrawPanel
+→ renderar fordon
+- CarView
+→ UI-hantering
+Låg cohesion:
+- CarController
+→ hanterar timer, UI-koppling, fordonsuppdatering, väggkollision, workshop-logik, turbo, flak, lastning
+→ gör för mycket, bryter SRP
+Förbättring:
+Flytta ut väggkollision, workshop-logik och specialbeteenden till egna serviceklasser.
+
+
+Coupling
++ Generellt låg coupling mellan model och view/controller.
+- DrawPanel är beroende av konkreta biltyper för att välja bild.
+Det är ett DIP/OCP-brott.
+- CarView och CarController har stark koppling: dubbelsidig kompositionspil 
+- Controller skapar view
+- View håller en referens tillbaka till controller
+Detta är tight coupling och bryter SoC och DIP.
+Förbättring:
+Inför ett interface som CarView kan bero på, t.ex. ICarController.
+
+-------------------------------------------------------------------------------
+
+Dependency Inversion Principle
++ Vehicle → Movable följer DIP.
++ Workshop<T> använder generics och beror på abstraktioner.
+- DrawPanel beror på konkreta biltyper (Volvo240, Saab95, Scania).
+- CarController beror fortfarande på CarView (konkret klass).
+- Workshop-logiken är beroende av Volvo240.
+-------------------------------------------------------------------------------
+
+Single Responsibility Principle
++ De flesta klasser följer SRP:
+Vehicle, Car, Truck, Saab95, Volvo240, Scania, Workshop, DrawPanel, CarView.
+- CarController bryter mot SRP:
+den har många separata ansvarsområden och många orsaker att förändras.
+Förbättring:
+Dela upp CarController i mindre komponenter:
+- CollisionHandler
+- WorkshopService
+- TurboService
+- TruckBedService
+- VehicleUpdateService
+
+
+
+
+Q3
+
+• Vehicle / Car / Truck / Saab95 / Volvo240 / Scania
+Ansvar:
+Representerar olika fordonstyper och deras beteenden (rörelse, gas/broms, riktning, specialfunktioner).
+Har hög cohesion och följer SoC och SRP.
+Anledning till förändring:
+Om fordonets beteende ändras, nya regler införs eller nya attribut behövs (t.ex. vikt, acceleration).
+
+• Workshop
+Ansvar:
+Hantera verkstadens kapacitet och lagra bilar av en viss typ.
+Anledning till förändring:
+Om lastningsregler ändras eller kapacitetshanteringen behöver justeras.
+
+• DrawPanel
+Ansvar:
+Renderar fordon och hämtar rätt bild för varje biltyp.
+Anledning till förändring:
+Nya biltyper kräver nya bilder. Klassen är känslig för nya biltyper eftersom den är beroende av konkreta klasser, vilket bryter lite mot DIP/OCP.
+
+• CarView
+Ansvar:
+Hanterar UI-komponenter (knappar, paneler, spinner) och skickar användarinput till controller.
+Anledning till förändring:
+Nya knappar, ändrad layout eller ändrade UI-krav.
+Har stark koppling till CarController.
+
+• CarController
+Ansvar:
+Hanterar timer-loop, uppdaterar bilar, väggkollision, workshop-logik, knapplogik och specialbeteenden via Vehicle.Action.
+Anledning till förändring:
+Många — eftersom klassen gör mycket. Exempel: ändrade kollisionregler, ändrad workshop-logik, nya UI-krav eller nya specialbeteenden.
+Bedömning:
+Låg cohesion och bryter SRP.
+Bör dekomponeras i mindre delar (t.ex. CollisionHandler, WorkshopService, TurboService, TruckBedService).
+
+• Dekomposition
+Den enda klassen som tydligt behöver delas upp är CarController, eftersom den har många separata ansvarsområden.
+Genom att flytta ut kollisioner, workshop-logik och specialbeteenden till egna serviceklasser skulle den följa SRP och SoC betydligt bättre.
+
+//
