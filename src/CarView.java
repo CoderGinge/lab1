@@ -15,20 +15,21 @@ import java.awt.event.ActionListener;
 
 public class CarView extends JFrame{
     private static final int X = 800;
-    private static final int Y = 800;
+    private static final int Y = 800; //window size
 
     // The controller member
     CarController carC;
 
-    DrawPanel drawPanel = new DrawPanel(X, Y-240);
+    DrawPanel drawPanel = new DrawPanel(X, Y-240); //the window - area for buttons
 
-    JPanel controlPanel = new JPanel();
+    JPanel controlPanel = new JPanel(); //holds buttons
 
-    JPanel gasPanel = new JPanel();
-    JSpinner gasSpinner = new JSpinner();
-    int gasAmount = 0;
-    JLabel gasLabel = new JLabel("Amount of gas");
+    JPanel gasPanel = new JPanel(); //label and spinner from here
+    JSpinner gasSpinner = new JSpinner(); //we can choose a number
+    int gasAmount = 0; //last spinner value
+    JLabel gasLabel = new JLabel("Amount of gas"); //text above spinner
 
+    //only UI-components before connected with actionListeners
     JButton gasButton = new JButton("Gas");
     JButton brakeButton = new JButton("Brake");
     JButton turboOnButton = new JButton("Saab Turbo on");
@@ -41,7 +42,7 @@ public class CarView extends JFrame{
 
     // Constructor
     public CarView(String framename, CarController cc){
-        this.carC = cc;
+        this.carC = cc; //CarController
         initComponents(framename);
     }
 
@@ -50,40 +51,40 @@ public class CarView extends JFrame{
     private void initComponents(String title) {
 
         this.setTitle(title);
-        this.setPreferredSize(new Dimension(X,Y));
-        this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        this.setPreferredSize(new Dimension(X,Y)); //dimensions
+        this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); //this tells the computer how everything will be set up. from left to right, if no space it goes down
 
-        this.add(drawPanel);
+        this.add(drawPanel); //window (no buttons)
 
 
-
+        //spinner model
         SpinnerModel spinnerModel =
                 new SpinnerNumberModel(0, //initial value
                         0, //min
                         100, //max
                         1);//step
-        gasSpinner = new JSpinner(spinnerModel);
+        gasSpinner = new JSpinner(spinnerModel); //connect to model
         gasSpinner.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 gasAmount = (int) ((JSpinner)e.getSource()).getValue();
             }
-        });
+        }); //everytime the user changes the spinner, we save it in gasAmount, so when the user press gas it will use the latest value
 
         gasPanel.setLayout(new BorderLayout());
         gasPanel.add(gasLabel, BorderLayout.PAGE_START);
-        gasPanel.add(gasSpinner, BorderLayout.PAGE_END);
+        gasPanel.add(gasSpinner, BorderLayout.PAGE_END); //layout for spinner and label
 
-        this.add(gasPanel);
+        this.add(gasPanel); //adding gasPanel
 
-        controlPanel.setLayout(new GridLayout(2,4));
+        controlPanel.setLayout(new GridLayout(2,4)); //2 rows, 4 columns
 
         controlPanel.add(gasButton, 0);
         controlPanel.add(turboOnButton, 1);
         controlPanel.add(liftBedButton, 2);
         controlPanel.add(brakeButton, 3);
         controlPanel.add(turboOffButton, 4);
-        controlPanel.add(lowerBedButton, 5);
-        controlPanel.setPreferredSize(new Dimension((X/2)+4, 200));
+        controlPanel.add(lowerBedButton, 5); //buttons
+        controlPanel.setPreferredSize(new Dimension((X/2)+4, 200)); //setting size
         this.add(controlPanel);
         controlPanel.setBackground(Color.CYAN);
 
@@ -93,14 +94,14 @@ public class CarView extends JFrame{
         startButton.setPreferredSize(new Dimension(X/5-15,200));
         this.add(startButton);
 
-
+        //bigger buttons, start and stop
         stopButton.setBackground(Color.red);
         stopButton.setForeground(Color.black);
         stopButton.setPreferredSize(new Dimension(X/5-15,200));
         this.add(stopButton);
 
-        // This actionListener is for the gas button only
 
+        // we are connecting the buttons to controller methods
         gasButton.addActionListener(e -> carC.gas(gasAmount));
 
         brakeButton.addActionListener(e -> carC.brake(gasAmount));
