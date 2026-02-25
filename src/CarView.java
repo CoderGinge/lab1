@@ -17,7 +17,7 @@ public class CarView extends JFrame{
     private static final int X = 800;
     private static final int Y = 800; //window size
 
-    // The controller member
+    // Vyn använder ICarController så den inte är låst till en viss implementation
     private final ICarController carC;
 
     DrawPanel drawPanel = new DrawPanel(X, Y-240); //the window - area for buttons
@@ -26,7 +26,7 @@ public class CarView extends JFrame{
 
     JPanel gasPanel = new JPanel(); //label and spinner from here
     JSpinner gasSpinner = new JSpinner(); //we can choose a number
-    int gasAmount = 1; //last spinner value
+    int gasAmount = 0; //last spinner value
     JLabel gasLabel = new JLabel("Amount of gas"); //text above spinner
 
     //only UI-components before connected with actionListeners

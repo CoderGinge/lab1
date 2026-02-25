@@ -1,5 +1,6 @@
 import java.awt.*;
 
+// Saab95 visar nu tydligt att den kan ritas (Drawable), har turbo (TurboCar), och kan lastas (Loadable)
 //Saab95 is a special type of Car that has a turbo, which has to be handled separately
 public class Saab95 extends Car implements Drawable, TurboCar, Loadable{
 
@@ -30,6 +31,7 @@ public class Saab95 extends Car implements Drawable, TurboCar, Loadable{
 
     @Override
     public String getImagePath() {
+        // DrawPanel hämtar rätt bild via denna sökväg
         return "/pics/Saab95.jpg";
     }
 

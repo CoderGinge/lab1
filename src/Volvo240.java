@@ -1,5 +1,6 @@
 import java.awt.*;
 
+// Volvo240 visar att den kan ritas (Drawable), tillåten i workshopen (WorkshopEligible), och kan lastas (Loadable)
 //Volvo240 is a special type of Car with a fixed trimFactor, which has to be handled separately
 public class Volvo240 extends Car implements Drawable, WorkshopEligible, Loadable{
 
@@ -21,6 +22,7 @@ public class Volvo240 extends Car implements Drawable, WorkshopEligible, Loadabl
 
     @Override
     public String getImagePath() {
+        // DrawPanel hämtar rätt bild via denna sökväg
         return "/pics/Volvo240.jpg";
     }
 }

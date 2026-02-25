@@ -1,5 +1,6 @@
 import java.awt.*;
 
+// Scania visar tydligt att den kan ritas (Drawable) och att den har ett flak (TruckBed)
 // Scania is a truck with a moveable truck bed that has to be handled separately
 // It has certain rules or when the truck bed angle can be changed, and when the vehicle is allowed to drive
 public class Scania extends Truck implements Drawable, TruckBed{
@@ -48,6 +49,7 @@ public class Scania extends Truck implements Drawable, TruckBed{
 
     @Override
     public String getImagePath() {
+        // DrawPanel hämtar rätt bild via denna sökäg
         return "/pics/Scania.jpg";
     }
 

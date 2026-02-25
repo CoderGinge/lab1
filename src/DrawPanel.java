@@ -10,7 +10,7 @@ import java.util.List;
 
 public class DrawPanel extends JPanel {
 
-    // every vehicle that we will draw
+    // DrawPanel ritar via interface Drawable, inte via specifika bilklasser
     private List<Drawable> cars = new ArrayList<>();
 
     // pictures

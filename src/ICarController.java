@@ -1,3 +1,4 @@
+// CArView anropar controllern via detta interface
 public interface ICarController {
 
     void gas(int amount);

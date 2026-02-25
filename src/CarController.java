@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
+// Vyn ska prata med intercfacet ICarController, inte direkt med en konkret klass
 public class CarController implements ICarController {
 
     private final int delay = 50;
@@ -12,7 +12,9 @@ public class CarController implements ICarController {
     CarView frame;
 
     private final ArrayList<Vehicle> cars = new ArrayList<>();
+    // Lista med objekt som kan ritas upp i DrawPanel
     private final ArrayList<Drawable> drawableCars = new ArrayList<>();
+    // Workshopen jobbar mot Car, inte en specifik bilklass
     private final Workshop<Car> workshop = new Workshop<>(1);
 
     private static final int CAR_IMG_W = 100;
@@ -42,7 +44,7 @@ public class CarController implements ICarController {
         cc.addVehicle(sc);
 
         cc.frame = new CarView("CarSim 1.0", cc); //creates GUI och gives carview a reference to controller
-        cc.frame.drawPanel.setCars(cc.drawableCars); //drawpanel draws exactly what carcontroller want
+        cc.frame.drawPanel.setCars(cc.drawableCars); //drawpanel draws only drawable vehichles
 
         cc.timer.start();
     }
@@ -58,7 +60,7 @@ public class CarController implements ICarController {
                 // collision
                 handleWallBounce(car);
 
-                // workshop: only Volvo is loaded
+                // WorkshopEligible styr vilka fordon som får hanteras av workshop
                 if (car instanceof WorkshopEligible && car instanceof Car) {
                     Car workshopCar = (Car) car;
                     if (hitsWorkshop(car)) {
@@ -116,6 +118,7 @@ public class CarController implements ICarController {
 
     public void addVehicle(Vehicle vehicle) {
         cars.add(vehicle);
+        // Bara drawable läggs in i rit-listan
         if (vehicle instanceof Drawable) {
             drawableCars.add((Drawable) vehicle);
         }
@@ -123,6 +126,7 @@ public class CarController implements ICarController {
 
     private void removeVehicle(Vehicle vehicle) {
         cars.remove(vehicle);
+        // Håll rit-listan synkad med fordonslistan
         if (vehicle instanceof Drawable) {
             drawableCars.remove((Drawable) vehicle);
         }
@@ -147,6 +151,7 @@ public class CarController implements ICarController {
     }
 
     public void turboOn() {
+        // Turbo styrs via TurboCar-interface
         for (Vehicle car : cars) {
             if (car instanceof TurboCar) {
                 TurboCar turboCar = (TurboCar) car;
@@ -156,6 +161,7 @@ public class CarController implements ICarController {
     }
 
     public void turboOff() {
+        // Turbo styrs via TurboCar-interface
         for (Vehicle car : cars) {
             if (car instanceof TurboCar) {
                 TurboCar turboCar = (TurboCar) car;
@@ -165,6 +171,7 @@ public class CarController implements ICarController {
     }
 
     public void liftBed() {
+        // Flaket styrs via TruckBed-interface
         for (Vehicle car : cars) {
             if (car instanceof TruckBed) {
                 TruckBed truckBed = (TruckBed) car;
@@ -174,6 +181,7 @@ public class CarController implements ICarController {
     }
 
     public void lowerBed() {
+        // Flaket styrs via TruckBed-interface
         for (Vehicle car : cars) {
             if (car instanceof TruckBed) {
                 TruckBed truckBed = (TruckBed) car;

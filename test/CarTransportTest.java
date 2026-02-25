@@ -10,7 +10,7 @@ public class CarTransportTest {
   }
 
   // trying a small car, less than 150 engine power that we can test with in other scenarios
-  private static class SmallCar extends Car {
+  private static class SmallCar extends Car implements Loadable{
     public SmallCar() { super(2, java.awt.Color.green, 100, "SmallCar"); }
     @Override protected double speedFactor() { return enginePower * 0.01; }
   }

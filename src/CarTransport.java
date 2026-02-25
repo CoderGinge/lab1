@@ -51,6 +51,7 @@ public class CarTransport extends Truck {
         if (getCurrentSpeed() != 0) return false;
         if (loadedCars.size() >= maxCapacity) return false;
         if (loadedCars.contains(car)) return false;
+        // Lastning tillåts bara för fordon som implementerar Loadable
         if (!(car instanceof Loadable)) return false;
         if (!isCarCloseEnough(car)) return false;
         //None of these can be true in order to load a car
