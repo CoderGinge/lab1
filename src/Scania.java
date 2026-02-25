@@ -2,7 +2,7 @@ import java.awt.*;
 
 // Scania is a truck with a moveable truck bed that has to be handled separately
 // It has certain rules or when the truck bed angle can be changed, and when the vehicle is allowed to drive
-public class Scania extends Truck {
+public class Scania extends Truck implements Drawable, TruckBed{
 
     // Current angle of the truck bed (0 = fully lowered)
     private double truckBedAngle = 0;
@@ -52,6 +52,11 @@ public class Scania extends Truck {
             case LOWER_BED -> lowerTruckBed(10);
             default -> { }
         }
+    }
+
+    @Override
+    public String getImagePath() {
+        return "/pics/Scania.jpg";
     }
 
 }

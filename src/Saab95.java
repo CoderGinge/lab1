@@ -1,7 +1,7 @@
 import java.awt.*;
 
 //Saab95 is a special type of Car that has a turbo, which has to be handled separately
-public class Saab95 extends Car{
+public class Saab95 extends Car implements Drawable, TurboCar{
 
     // Keeps track of whether turbo is on or off.
     // It is protected so that it can be used by subclasses, but can't be accessed directly by the user
@@ -33,6 +33,11 @@ public class Saab95 extends Car{
             case TURBO_OFF -> setTurboOff();
             default -> {}
         }
+    }
+
+    @Override
+    public String getImagePath() {
+        return "/pics/Saab95.jpg";
     }
 
 }

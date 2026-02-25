@@ -11,12 +11,9 @@ import java.util.List;
 public class DrawPanel extends JPanel {
 
     // every vehicle that we will draw
-    private List<Vehicle> cars = new ArrayList<>();
+    private List<Drawable> cars = new ArrayList<>();
 
     // pictures
-    private BufferedImage volvoImage;
-    private BufferedImage saabImage;
-    private BufferedImage scaniaImage;
     private BufferedImage volvoWorkshopImage;
 
     // Workshop-position
@@ -30,9 +27,6 @@ public class DrawPanel extends JPanel {
 
         //loads pictures to window
         try {
-            volvoImage = ImageIO.read(requireResource("/pics/Volvo240.jpg"));
-            saabImage = ImageIO.read(requireResource("/pics/Saab95.jpg"));
-            scaniaImage = ImageIO.read(requireResource("/pics/Scania.jpg"));
             volvoWorkshopImage = ImageIO.read(requireResource("/pics/VolvoBrand.jpg"));
         } catch (IOException e) {
             throw new RuntimeException("Could not load picture... (IOException): " + e.getMessage(), e);
@@ -41,7 +35,7 @@ public class DrawPanel extends JPanel {
     }
 
     // Controller calls this once, when created
-    public void setCars(List<Vehicle> cars) {
+    public void setCars(List<Drawable> cars) {
         this.cars = cars;
     }
 
@@ -59,6 +53,17 @@ public class DrawPanel extends JPanel {
         return stream;
     }
 
+
+    private BufferedImage getImage(String path) {
+        if (path == null || path.isEmpty()) return null;
+        try {
+            return ImageIO.read(requireResource(path));
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load picture... (IOException): "+e.getMessage(), e);
+        }
+    }
+
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g); //clears earlier window and then draws the background
@@ -69,8 +74,8 @@ public class DrawPanel extends JPanel {
         }
 
         // draw all cars
-        for (Vehicle car : cars) {
-            BufferedImage img = pickImageFor(car);
+        for (Drawable car : cars) {
+            BufferedImage img = getImage(car.getImagePath());
             if (img == null) continue;
 
             int x = (int) Math.round(car.getX());
@@ -80,12 +85,5 @@ public class DrawPanel extends JPanel {
         }
     }
 
-    private BufferedImage pickImageFor(Vehicle car) {
-        if (car instanceof Volvo240) return volvoImage;
-        if (car instanceof Saab95) return saabImage;
-        if (car instanceof Scania) return scaniaImage;
-        // correct picture. If nothing, volvoImage
-        return volvoImage;
-    }
 }
 

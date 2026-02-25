@@ -12,8 +12,6 @@ public class CarTransport extends Truck {
 
     // A reasonable distance to be able to load a car.
     private static final double MAX_LOAD_DISTANCE = 2.0;
-    // A size limit. We assume cars with too high engine power are too large/heavy.
-    private static final double MAX_ALLOWED_ENGINE_POWER = 150.0;
 
     public CarTransport() {
         // Chosen reasonable default values
@@ -53,7 +51,7 @@ public class CarTransport extends Truck {
         if (getCurrentSpeed() != 0) return false;
         if (loadedCars.size() >= maxCapacity) return false;
         if (loadedCars.contains(car)) return false;
-        if (!isCarEligibleSize(car)) return false;
+        if (!(car instanceof Loadable)) return false;
         if (!isCarCloseEnough(car)) return false;
         //None of these can be true in order to load a car
 
@@ -95,10 +93,6 @@ public class CarTransport extends Truck {
         double dy = car.y - this.y;
         return Math.hypot(dx, dy) <= MAX_LOAD_DISTANCE;
     } //is the car close enough
-
-    private boolean isCarEligibleSize(Car car) {
-        return car.getEnginePower() <= MAX_ALLOWED_ENGINE_POWER;
-    } //is the car within our size limit
 
     private void placeCarNearTransport(Car car) {
         //when we remove the car from the transport, its location should just behind the car, in every direction.

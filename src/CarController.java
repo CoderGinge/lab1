@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class CarController {
+public class CarController implements ICarController {
 
     private final int delay = 50;
     private final Timer timer = new Timer(delay, new TimerListener()); //decides how often the screen will be repainted
@@ -12,7 +12,8 @@ public class CarController {
     CarView frame;
 
     private final ArrayList<Vehicle> cars = new ArrayList<>();
-    private final Workshop<Volvo240> volvoWorkshop = new Workshop<>(1);
+    private final ArrayList<Drawable> drawableCars = new ArrayList<>();
+    private final Workshop<Car> workshop = new Workshop<>(1);
 
     private static final int CAR_IMG_W = 100;
     private static final int CAR_IMG_H = 60;
@@ -36,12 +37,12 @@ public class CarController {
         sc.turnRight();
 
         //adding in the list
-        cc.cars.add(v);
-        cc.cars.add(s);
-        cc.cars.add(sc);
+        cc.addVehicle(v);
+        cc.addVehicle(s);
+        cc.addVehicle(sc);
 
         cc.frame = new CarView("CarSim 1.0", cc); //creates GUI och gives carview a reference to controller
-        cc.frame.drawPanel.setCars(cc.cars); //drawpanel draws exactly what carcontroller want
+        cc.frame.drawPanel.setCars(cc.drawableCars); //drawpanel draws exactly what carcontroller want
 
         cc.timer.start();
     }
@@ -58,16 +59,17 @@ public class CarController {
                 handleWallBounce(car);
 
                 // workshop: only Volvo is loaded
-                if (car instanceof Volvo240 volvo) {
-                    if (hitsWorkshop(volvo)) {
-                        boolean loaded = volvoWorkshop.addCar(volvo);
+                if (car instanceof WorkshopEligible && car instanceof Car) {
+                    Car workshopCar = (Car) car;
+                    if (hitsWorkshop(car)) {
+                        boolean loaded = workshop.addCar(workshopCar);
                         if (loaded) {
-                            cars.remove(volvo);
+                            removeVehicle(car);
                         } else {
-                            volvo.stopEngine();
-                            volvo.turnLeft();
-                            volvo.turnLeft();
-                            volvo.startEngine();
+                            car.stopEngine();
+                            car.turnLeft();
+                            car.turnLeft();
+                            car.startEngine();
                         }
                     }
                 }
@@ -103,7 +105,7 @@ public class CarController {
         }
     }
 
-    private boolean hitsWorkshop(Volvo240 car) {
+    private boolean hitsWorkshop(Vehicle car) {
         Point p = frame.drawPanel.getWorkshopPoint();
         int x = (int) Math.round(car.getX());
         int y = (int) Math.round(car.getY());
@@ -112,38 +114,72 @@ public class CarController {
         return Math.abs(x - p.x) < hit && Math.abs(y - p.y) < hit; //target area
     }
 
-    void gas(int amount) {
+    public void addVehicle(Vehicle vehicle) {
+        cars.add(vehicle);
+        if (vehicle instanceof Drawable) {
+            drawableCars.add((Drawable) vehicle);
+        }
+    }
+
+    private void removeVehicle(Vehicle vehicle) {
+        cars.remove(vehicle);
+        if (vehicle instanceof Drawable) {
+            drawableCars.remove((Drawable) vehicle);
+        }
+    }
+
+    public void gas(int amount) {
         double gas = amount / 100.0;
         for (Vehicle car : cars) car.gas(gas);
     }
 
-    void brake(int amount) {
+    public void brake(int amount) {
         double brake = amount / 100.0;
         for (Vehicle car : cars) car.brake(brake);
     }
 
-    void startAllCars() {
+    public void startAllCars() {
         for (Vehicle car : cars) car.startEngine();
     }
 
-    void stopAllCars() {
+    public void stopAllCars() {
         for (Vehicle car : cars) car.stopEngine();
     }
 
-    void turboOn() {
-        for (Vehicle car : cars) car.perform(Vehicle.Action.TURBO_ON);
+    public void turboOn() {
+        for (Vehicle car : cars) {
+            if (car instanceof TurboCar) {
+                TurboCar turboCar = (TurboCar) car;
+                turboCar.setTurboOn();
+            }
+        }
     }
 
-    void turboOff() {
-        for (Vehicle car : cars) car.perform(Vehicle.Action.TURBO_OFF);
+    public void turboOff() {
+        for (Vehicle car : cars) {
+            if (car instanceof TurboCar) {
+                TurboCar turboCar = (TurboCar) car;
+                turboCar.setTurboOff();
+            }
+        }
     }
 
-    void liftBed() {
-        for (Vehicle car : cars) car.perform(Vehicle.Action.LIFT_BED);
+    public void liftBed() {
+        for (Vehicle car : cars) {
+            if (car instanceof TruckBed) {
+                TruckBed truckBed = (TruckBed) car;
+                truckBed.raiseTruckBed(10);
+            }
+        }
     }
 
-    void lowerBed() {
-        for (Vehicle car : cars) car.perform(Vehicle.Action.LOWER_BED);
+    public void lowerBed() {
+        for (Vehicle car : cars) {
+            if (car instanceof TruckBed) {
+                TruckBed truckBed = (TruckBed) car;
+                truckBed.lowerTruckBed(10);
+            }
+        }
     }
 
   

@@ -18,7 +18,7 @@ public class CarView extends JFrame{
     private static final int Y = 800; //window size
 
     // The controller member
-    CarController carC;
+    ICarController carC;
 
     DrawPanel drawPanel = new DrawPanel(X, Y-240); //the window - area for buttons
 

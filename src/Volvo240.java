@@ -1,7 +1,7 @@
 import java.awt.*;
 
 //Volvo240 is a special type of Car with a fixed trimFactor, which has to be handled separately
-public class Volvo240 extends Car{
+public class Volvo240 extends Car implements Drawable, WorkshopEligible{
 
     // Fixed trimFactor
     // It is protected so that it can be used by subclasses, and final since it should never change.
@@ -18,4 +18,10 @@ public class Volvo240 extends Car{
     protected double speedFactor(){
         return enginePower * 0.01 * trimFactor;
     }
+
+    @Override
+    public String getImagePath() {
+        return "/pics/Volvo240.jpg";
+    }
 }
+
