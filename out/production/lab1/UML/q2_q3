@@ -123,9 +123,6 @@ Genom att flytta ut kollisioner, workshop-logik och specialbeteenden till egna s
 
 Q4
 
-Uppdelning av CarController i Service klasser:
-Klassen har just nu för många ansvarsområden. Genom att dela upp den i mindre klasser löser vi problemet som vi hade med SRP. Den stora klassen har nu blivit 5 mindre klasser, som alla följer SRP. Detta är även bättre för att motverka problemet med cohesion, då dessa klasser egentligen inte har så mycket gemensamt, även om man skulle kunna tro det. Dessutom löser detta problemet med att det fanns för många områden som vi skulle kunna förändra i framtiden. Det blir nu även lättare att förstå koden snabbt, testa varje delbeteende självt samt göra det lättare med code-reuse.
-
 Ny ICarController Interface:
 Förut var CarView och CarController hårt kopplade åt båda håll. Detta bröt mot DIP då visualiseringen berodde direkt på en konkret implementation.
 
@@ -152,9 +149,7 @@ Refraktorisering:
 Skapa ICarController Interfacet och låt CarController implementera det. Ändra sedan CarView så att den refererar till det nya interfacet.
 Lägg till interfacet Drawable för visualisering. Låt fordonen själva implementera interfacet och flytta bildvalet till fordonet. Ändra även DrawPanel så att den använder interfacet istället för en massa “if”.
 Inför de nya, små, interfacen för specialfunktionaliteterna. Alltså: TurboCar, TruckBed, Loadable, WorkshopEligible. Låt sedan relevanta fordon implementera dem. (Saab - TurboCar, Volvo - WorkshopEligible, Scania - TruckBed, lastbara fordon - Loadable)
-Skapa serviceklasserna och koppla in dessa i CarController. Alltså: VehicleUpdateService, CollisionHandler, WorkshopService, TurboService, TruckBedService. Lägg in dessa som fält i CarController.
 Flytta sedan över lämplig funktionalitet från CarController in i lämplig ny serviceklass.
-Låt de nya Serviceklasserna arbeta mot de mindre interfacen för specialfunktionalitet
 Koppla billastaren till loadable, istället för att bero på hårdkodade värden.
 Säkerställ att CarController nu bara beter sig som en orkestratör och att all annan funktionalitet är utflyttad.
 Kör test på de nya ändringarna, och testa så visualiseringen fortfarande funkar som förväntat.
@@ -169,7 +164,7 @@ Område 2:
 Skapa de mindre interfacen för specialfunktionalitet och låta relevant fordon implementera rätt interface. (TurboCar, TruckBed, Loadable, WorkshopEligible)
 
 Område 3:
-Skapa de nya serviceklasserna och flytta ut funktionaliteten från CarController in i dessa.
+Fixa CarController så att den intergrerar alla nya interfaces
 
 Resterande bygger på att dessa är klara.
 
