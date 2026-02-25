@@ -45,14 +45,6 @@ public class Scania extends Truck implements Drawable, TruckBed{
         return enginePower * 0.01;
     }
 
-    @Override
-    public void perform(Action action){
-        switch(action){
-            case LIFT_BED -> raiseTruckBed(10);
-            case LOWER_BED -> lowerTruckBed(10);
-            default -> { }
-        }
-    }
 
     @Override
     public String getImagePath() {

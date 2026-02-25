@@ -5,17 +5,16 @@ public class Workshop<T extends Car> {
     private final ArrayList<T> inside;    // list of type car, cars in workshop
 
     public Workshop(int capacity){
-        this.capacity=capacity;
+        this.capacity=Math.max(1, capacity);
         this.inside= new ArrayList<>();
     }
 
     public boolean addCar (T car) {
-        if (inside.size()<capacity){
-            inside.add(car);
-            return true;
-        }
-        else 
-            return false;
+        if (car == null) return false;
+        if (inside.contains(car)) return false;
+        if (inside.size() >= capacity) return false;
+        inside.add(car);
+        return true;
     }
 
     public T takeCarOut(T car){

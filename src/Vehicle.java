@@ -139,11 +139,6 @@ public abstract class Vehicle implements Movable {
     //controlled access. drawpanel can read only, controller can modify
 
 
-    public enum Action {
-        TURBO_ON, TURBO_OFF, LIFT_BED, LOWER_BED
-    }
-
-    public void perform(Action action) { }
 
 }
 

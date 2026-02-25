@@ -18,7 +18,7 @@ public class CarView extends JFrame{
     private static final int Y = 800; //window size
 
     // The controller member
-    ICarController carC;
+    private final ICarController carC;
 
     DrawPanel drawPanel = new DrawPanel(X, Y-240); //the window - area for buttons
 
@@ -26,7 +26,7 @@ public class CarView extends JFrame{
 
     JPanel gasPanel = new JPanel(); //label and spinner from here
     JSpinner gasSpinner = new JSpinner(); //we can choose a number
-    int gasAmount = 0; //last spinner value
+    int gasAmount = 1; //last spinner value
     JLabel gasLabel = new JLabel("Amount of gas"); //text above spinner
 
     //only UI-components before connected with actionListeners
@@ -41,7 +41,7 @@ public class CarView extends JFrame{
     JButton stopButton = new JButton("Stop all cars");
 
     // Constructor
-    public CarView(String framename, CarController cc){
+    public CarView(String framename, ICarController cc){
         this.carC = cc; //CarController
         initComponents(framename);
     }
