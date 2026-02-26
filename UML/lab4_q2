@@ -1,0 +1,94 @@
+//
+Uppgift 2
+
+***Vilka avvikelser från MVC-idealet kan ni identifiera i det ursprungliga användargränssnittet? Vad borde ha gjorts smartare, dummare eller tunnare?***
+
+I det ursprungliga användargränssnittet hade vi en övergripande
+struktur utifrån MVC med Carview, CarController, Vehicle och truck mm.
+Däremot var ansvarsfördelningen inte enligt MVC idealet.
+
+
+En tydlig avvikelse var att CarController innehöll både controllerlogik och modellansvar.
+Den höll listan över alla fordon tex cars: ArrayList och hanterade även regler som
+väggkollisioner (handleWallBounce). Detta innebär att kontrollern inte bara översatte
+användarinput till modelloperationer, utan även innehöll delar av applikationens logik och tillstånd.
+Enligt MVC borde själva världens tillstånd och regler ligga i en tydligare Model-komponent.
+
+--((bör vara i modell, blir svårt att byta och testa samt att ändringar kräver att controller ändras)--
+
+
+En annan punkt, simuleringen drevs via TimerListener från controllern, där varje tick uppdaterade fordonens positioner
+och kontrollerade regler. Även detta gör controllern “tjock”, eftersom den både hanterar
+användarinput och systemets interna uppdateringslogik.
+
+--(modell bör sköta själva uppdateringen medans controller triggar en tick)--
+
+
+En annan avvikelse var att vyn var kopplad direkt till vår CarController-klass, istället
+för till ett interface. Detta gör vyn mindre flexibel och svårare att byta ut eller testa isolerat.
+
+--(MVC vill att view ska var utbytbar, och inte bero på hur controller är implementerad.
+Det är en hård koppling mellan Carview och carcontroller, så om vi vill byta controller måste också view ändras)--
+
+
+DrawPanel hade dessutom direkt tillgång till en lista av fordon som den ritade.
+Det innebär att vyn läser direkt från modellobjekt, vilket i sig inte är
+fel i enkel MVC, men det kan leda till att vyn blir mer beroende av modellens struktur än nödvändigt.
+
+--(view blir beroende av modellens detaljer om den måste känna till specifika attribut, tex if (vehicle instanceof volvo240).
+ny biltyp kräver då ändring i view, view ska bara presentera egentligen)--
+
+Sammanfattningsvis var de största MVC-avvikelserna:
+-Controller ägde modellens data (listan över fordon).
+-Controller innehöll affärslogik (kollision, uppdatering).
+-Ingen tydlig samlande Model-klass för “världen”.
+-View var kopplad till konkret controller istället för ett interface.
+-Simuleringsloopen låg i controllern.
+
+
+
+
+
+
+
+
+
+***Vilka av dessa brister åtgärdade ni med er nya design från del 3? Hur då? Vilka brister åtgärdade ni inte?***
+
+I den nya designen åtgärdades flera av dessa brister.
+
+En viktig förbättring är att CarView nu kommunicerar via ett interface ICarController
+istället för direkt med CarController. Detta minskar kopplingen mellan view och
+controller och gör designen mer flexibel. Viewen vet nu bara att den pratar
+med en controller, inte vilken implementation det är.
+
+--(Följer Dependency Inversion, view bryr sig inte hur controllern är implementerad.
+View och controller kan testas isolerat. Systemet är mer modulärt, view är "dummare"(vilket är bra))--
+
+
+En annan förbättring var att ritningen av fordon gjordes mer generell genom användning
+av ett Drawable-interface. DrawPanel ritar nu objekt via detta interface istället för att
+känna till specifika bilklasser. Detta gör vyn “dummare” och mer oberoende av modellens konkreta typer.
+
+
+Dessutom har vissa beteenden flyttats närmare modellen genom att använda interfaces som TurboCar, TruckBed, Loadable osv.
+Detta gör att specialbeteenden ligger i respektive klass istället för att styras externt från controllern.
+
+--(controller behöver nu inte veta exakt hur tex turbo fungerar. Tydligare ansvarsfördelning. mindre smart controller)--
+
+
+Däremot finns fortfarande vissa MVC-brister kvar:
+- Controller äger fortfarande listan över fordon.
+- Controller innehåller fortfarande uppdateringslogik (move, väggkollision, workshop-hantering).
+- Det finns fortfarande ingen tydlig applikation som samlar modellens tillstånd och regler.
+- Controller är fortfarande delvis beroende av vyn, t.ex. genom att trigga repaint och använda information om ritytans dimensioner.
+
+Sammanfattningsvis har kopplingen mellan view och controller förbättrats, och vyn har gjorts mer generell och mindre beroende av
+konkreta modellklasser. Däremot är controller fortfarande relativt tjock och blandar delvis controller- och modellansvar.
+
+
+
+
+
+
+
