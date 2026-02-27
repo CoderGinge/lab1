@@ -9,4 +9,5 @@ public interface ICarController {
     void turboOff();
     void liftBed();
     void lowerBed();
+    void addListener(ControllerListener l);
 }

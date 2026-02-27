@@ -1,0 +1,156 @@
+//
+Uppgift 2
+
+***Vilka avvikelser från MVC-idealet kan ni identifiera i det ursprungliga användargränssnittet? Vad borde ha gjorts smartare, dummare eller tunnare?***
+
+I det ursprungliga användargränssnittet hade vi en övergripande
+struktur utifrån MVC med Carview, CarController, Vehicle och truck mm.
+Däremot var ansvarsfördelningen inte enligt MVC idealet.
+
+
+En tydlig avvikelse var att CarController innehöll både controllerlogik och modellansvar.
+Den höll listan över alla fordon tex cars: ArrayList och hanterade även regler som
+väggkollisioner (handleWallBounce). Detta innebär att kontrollern inte bara översatte
+användarinput till modelloperationer, utan även innehöll delar av applikationens logik och tillstånd.
+Enligt MVC borde själva världens tillstånd och regler ligga i en tydligare Model-komponent.
+
+--((bör vara i modell, blir svårt att byta och testa samt att ändringar kräver att controller ändras)--
+
+
+En annan punkt, simuleringen drevs via TimerListener från controllern, där varje tick uppdaterade fordonens positioner
+och kontrollerade regler. Även detta gör controllern “tjock”, eftersom den både hanterar
+användarinput och systemets interna uppdateringslogik.
+
+--(modell bör sköta själva uppdateringen medans controller triggar en tick)--
+
+
+En annan avvikelse var att vyn var kopplad direkt till vår CarController-klass, istället
+för till ett interface. Detta gör vyn mindre flexibel och svårare att byta ut eller testa isolerat.
+
+--(MVC vill att view ska var utbytbar, och inte bero på hur controller är implementerad.
+Det är en hård koppling mellan Carview och carcontroller, så om vi vill byta controller måste också view ändras)--
+
+
+DrawPanel hade dessutom direkt tillgång till en lista av fordon som den ritade.
+Det innebär att vyn läser direkt från modellobjekt, vilket i sig inte är
+fel i enkel MVC, men det kan leda till att vyn blir mer beroende av modellens struktur än nödvändigt.
+
+--(view blir beroende av modellens detaljer om den måste känna till specifika attribut, tex if (vehicle instanceof volvo240).
+ny biltyp kräver då ändring i view, view ska bara presentera egentligen)--
+
+Sammanfattningsvis var de största MVC-avvikelserna:
+-Controller ägde modellens data (listan över fordon).
+-Controller innehöll affärslogik (kollision, uppdatering).
+-Ingen tydlig samlande Model-klass för “världen”.
+-View var kopplad till konkret controller istället för ett interface.
+-Simuleringsloopen låg i controllern.
+
+
+
+
+
+
+
+
+
+***Vilka av dessa brister åtgärdade ni med er nya design från del 3? Hur då? Vilka brister åtgärdade ni inte?***
+
+I den nya designen åtgärdades flera av dessa brister.
+
+En viktig förbättring är att CarView nu kommunicerar via ett interface ICarController
+istället för direkt med CarController. Detta minskar kopplingen mellan view och
+controller och gör designen mer flexibel. Viewen vet nu bara att den pratar
+med en controller, inte vilken implementation det är.
+
+--(Följer Dependency Inversion, view bryr sig inte hur controllern är implementerad.
+View och controller kan testas isolerat. Systemet är mer modulärt, view är "dummare"(vilket är bra))--
+
+
+En annan förbättring var att ritningen av fordon gjordes mer generell genom användning
+av ett Drawable-interface. DrawPanel ritar nu objekt via detta interface istället för att
+känna till specifika bilklasser. Detta gör vyn “dummare” och mer oberoende av modellens konkreta typer.
+
+
+Dessutom har vissa beteenden flyttats närmare modellen genom att använda interfaces som TurboCar, TruckBed, Loadable osv.
+Detta gör att specialbeteenden ligger i respektive klass istället för att styras externt från controllern.
+
+--(controller behöver nu inte veta exakt hur tex turbo fungerar. Tydligare ansvarsfördelning. mindre smart controller)--
+
+
+Däremot finns fortfarande vissa MVC-brister kvar:
+- Controller äger fortfarande listan över fordon.
+- Controller innehåller fortfarande uppdateringslogik (move, väggkollision, workshop-hantering).
+- Det finns fortfarande ingen tydlig applikation som samlar modellens tillstånd och regler.
+- Controller är fortfarande delvis beroende av vyn, t.ex. genom att trigga repaint och använda information om ritytans dimensioner.
+
+Sammanfattningsvis har kopplingen mellan view och controller förbättrats, och vyn har gjorts mer generell och mindre beroende av
+konkreta modellklasser. Däremot är controller fortfarande relativt tjock och blandar delvis controller- och modellansvar.
+
+
+
+
+
+
+
+//
+Uppgift 3
+
+Observer
+(när ett objekt håller en lista av observatörer blir parter som bryr
+sig informerade automatiskt när dess tillstånd ändras. Detta minskar kopplingen mellan komponenter
+eftersom objekt inte behöver veta exakt hur observers reagerar)
+
+--- Observer används i vårt projekt genom swing. Exempelvis implementerar knappar
+ActionListener, vilket är en form av observer-mönster där GUI-komponenter notifierar
+lyssnare när en händelse inträffar.
+
+--- Däremot används inte Observer mellan modell och vy. I nuläget ansvarar controllern
+för att anropa repaint() efter att modellen uppdaterats. Detta skapar en koppling mellan
+controller och view (tjockt).
+En förbättring kan vara detta: Controller → notifyListeners()
+                               View → repaint()
+Controller blir då "dummare", den behöver inte veta hur vyn uppdateras. ***
+
+
+Factory Method
+(designmönster för att skapa objekt utan resten av koden behöver veta exakt vilken
+klass som instansieras. Tex "Koden som använder bilen behöver inte veta hur man skapar den".
+Löser hård koppling, duplicering mm)
+
+---Vi har ingen tydlig använding av Factory Method i vår kod för tillfället.
+
+---I vårt program skapas fordon direkt i controller genom anrop till konstruktorer.
+Det blir hårt kopplat till de fordonsklasserna och om vi måste ändra hur fordon skapas görs det i controller.
+Man hade kunnat ha en tex VehicleFactory vars ansvar är att skapa fordon, skapandelogiken blir samlad.
+Designen blir mer flexibel och lättare att utöka. ***
+
+
+State
+(State är ett beteendemönster där ett objekt ändrar sitt beteende beroende på
+vilket "tillstånd" det är i. Detta kan minska antal if/else, göra program mer "lättläst" bland annat)
+
+---I vår kod används state redan då vissa klasser har tillståndsvaariabler. Saab har tex turboOn vilket påverkar hastigheten,
+samma gasning ger olika resultat beroende på vilket tillstånd turbo är i. Vi har också truckBedAngle i Scania, kan
+den köra eller inte?
+
+---För detta program anser vi att denna lösning är mycket bra. Vi tror inte att en ändring hade förbättrat så mycket, främst
+gjort den mer komplex. Men om systemet växte eller fick fler tillstånd hade det varit bättre att använda full state-pattern.
+Många if satser kan bli rörigt och svårt att få till, om man istället hade flera konkreta state-klasser hade den gått till nästa vid knapptryck.
+Vi anser dock inte att det behövs för ett program som detta.
+
+
+Composite
+(strukturmönster där man vill kunna behandla en enskild sak(leaf) och en grupp av saker(Composite) på exakt samma sätt.
+Tex move() ska funka på en bil och flera.
+
+---I vår kod används inte Composite som designmönster. Vi hanterar istället flera fordon genom att lagra dem
+i en lista och iterera över när vi vill uppdatera eller styra. Därav ingen riktig trädstruktur av objekt, mer en platt samling.
+
+---I vår applikation anses det inte nödvändigt då vi inte har något behov av hierarkiska grupper eller träd av objekt. Det hade mest
+blivit mer komplext utan någon riktig fördel. Teoretiskt hade vi kunnat skapa en klass tex Fleet som implementerr samma interface som fordonen, tex movable, och
+som innehåller en lista av movable. tex Move() hade då kunnats anropa på en hel grupp på samma sätt som enskilt fordon.
+
+
+
+
+

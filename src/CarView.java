@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
  * TODO: Write more actionListeners and wire the rest of the buttons
  **/
 
-public class CarView extends JFrame{
+public class CarView extends JFrame implements ControllerListener {
     private static final int X = 800;
     private static final int Y = 800; //window size
 
@@ -43,6 +43,7 @@ public class CarView extends JFrame{
     // Constructor
     public CarView(String framename, ICarController cc){
         this.carC = cc; //CarController
+        this.carC.addListener(this);
         initComponents(framename);
     }
 
@@ -127,5 +128,11 @@ public class CarView extends JFrame{
         this.setVisible(true);
         // Make sure the frame exits when "x" is pressed
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+    }
+    @Override
+    public void controllerUpdated() {
+        drawPanel.repaint();
     }
 }

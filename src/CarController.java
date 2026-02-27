@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
+
 // Vyn ska prata med intercfacet ICarController, inte direkt med en konkret klass
 public class CarController implements ICarController {
 
@@ -20,23 +22,31 @@ public class CarController implements ICarController {
     private static final int CAR_IMG_W = 100;
     private static final int CAR_IMG_H = 60;
 
+    // Observer: listeners notified after each update tick
+    private final List<ControllerListener> listeners = new ArrayList<>();
+
+    @Override
+    public void addListener(ControllerListener l) {
+        listeners.add(l);
+    }
+
+    private void notifyListeners() {
+        for (ControllerListener l : listeners) {
+            l.controllerUpdated();
+        }
+    }
+
+
     public static void main(String[] args) {
         CarController cc = new CarController();
+        VehicleFactory factory = new VehicleFactory();
 
         //creating 3 vehicles
-        Volvo240 v = new Volvo240();
-        v.setX(0); v.setY(0);
+        Vehicle v = factory.createVolvo(0, 0);
+        Vehicle s = factory.createSaab(0, 100);
+        Vehicle sc = factory.createScania(0, 200);
 
-        Saab95 s = new Saab95();
-        s.setX(0); s.setY(100);
 
-        Scania sc = new Scania();
-        sc.setX(0); sc.setY(200);
-
-        // turn to the right
-        v.turnRight();
-        s.turnRight();
-        sc.turnRight();
 
         //adding in the list
         cc.addVehicle(v);
@@ -77,7 +87,7 @@ public class CarController implements ICarController {
                 }
             }
 
-            frame.drawPanel.repaint();
+            notifyListeners();
         }
     }
 

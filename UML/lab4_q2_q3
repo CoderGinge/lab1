@@ -92,3 +92,65 @@ konkreta modellklasser. Däremot är controller fortfarande relativt tjock och b
 
 
 
+//
+Uppgift 3
+
+Observer
+(när ett objekt håller en lista av observatörer blir parter som bryr
+sig informerade automatiskt när dess tillstånd ändras. Detta minskar kopplingen mellan komponenter
+eftersom objekt inte behöver veta exakt hur observers reagerar)
+
+--- Observer används i vårt projekt genom swing. Exempelvis implementerar knappar
+ActionListener, vilket är en form av observer-mönster där GUI-komponenter notifierar
+lyssnare när en händelse inträffar.
+
+--- Däremot används inte Observer mellan modell och vy. I nuläget ansvarar controllern
+för att anropa repaint() efter att modellen uppdaterats. Detta skapar en koppling mellan
+controller och view (tjockt).
+En förbättring kan vara detta: Controller → notifyListeners()
+                               View → repaint()
+Controller blir då "dummare", den behöver inte veta hur vyn uppdateras. ***
+
+
+Factory Method
+(designmönster för att skapa objekt utan resten av koden behöver veta exakt vilken
+klass som instansieras. Tex "Koden som använder bilen behöver inte veta hur man skapar den".
+Löser hård koppling, duplicering mm)
+
+---Vi har ingen tydlig använding av Factory Method i vår kod för tillfället.
+
+---I vårt program skapas fordon direkt i controller genom anrop till konstruktorer.
+Det blir hårt kopplat till de fordonsklasserna och om vi måste ändra hur fordon skapas görs det i controller.
+Man hade kunnat ha en tex VehicleFactory vars ansvar är att skapa fordon, skapandelogiken blir samlad.
+Designen blir mer flexibel och lättare att utöka. ***
+
+
+State
+(State är ett beteendemönster där ett objekt ändrar sitt beteende beroende på
+vilket "tillstånd" det är i. Detta kan minska antal if/else, göra program mer "lättläst" bland annat)
+
+---I vår kod används state redan då vissa klasser har tillståndsvaariabler. Saab har tex turboOn vilket påverkar hastigheten,
+samma gasning ger olika resultat beroende på vilket tillstånd turbo är i. Vi har också truckBedAngle i Scania, kan
+den köra eller inte?
+
+---För detta program anser vi att denna lösning är mycket bra. Vi tror inte att en ändring hade förbättrat så mycket, främst
+gjort den mer komplex. Men om systemet växte eller fick fler tillstånd hade det varit bättre att använda full state-pattern.
+Många if satser kan bli rörigt och svårt att få till, om man istället hade flera konkreta state-klasser hade den gått till nästa vid knapptryck.
+Vi anser dock inte att det behövs för ett program som detta.
+
+
+Composite
+(strukturmönster där man vill kunna behandla en enskild sak(leaf) och en grupp av saker(Composite) på exakt samma sätt.
+Tex move() ska funka på en bil och flera.
+
+---I vår kod används inte Composite som designmönster. Vi hanterar istället flera fordon genom att lagra dem
+i en lista och iterera över när vi vill uppdatera eller styra. Därav ingen riktig trädstruktur av objekt, mer en platt samling.
+
+---I vår applikation anses det inte nödvändigt då vi inte har något behov av hierarkiska grupper eller träd av objekt. Det hade mest
+blivit mer komplext utan någon riktig fördel. Teoretiskt hade vi kunnat skapa en klass tex Fleet som implementerr samma interface som fordonen, tex movable, och
+som innehåller en lista av movable. tex Move() hade då kunnats anropa på en hel grupp på samma sätt som enskilt fordon.
+
+
+
+
+
