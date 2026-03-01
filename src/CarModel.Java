@@ -5,7 +5,7 @@ public class CarModel{
     // håller listorna ist för carController
     private final List<Vehicle> vehicles= new ArrayList<>();
     private final Workshop<Car> workshop= new Workshop<>(1);
-
+    
     public void addVehicle(Vehicle v){
         vehicles.add(v);
     }
