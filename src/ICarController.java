@@ -10,4 +10,7 @@ public interface ICarController {
     void liftBed();
     void lowerBed();
     void addListener(ControllerListener l);
+
+    void addRandomCar();    // metoder för nya knapparna
+    void removeLastCar();   
 }

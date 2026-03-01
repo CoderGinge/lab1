@@ -1,9 +1,7 @@
+import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * This class represents the full view of the MVC pattern of your car simulator.
@@ -36,6 +34,9 @@ public class CarView extends JFrame implements ControllerListener {
     JButton turboOffButton = new JButton("Saab Turbo off");
     JButton liftBedButton = new JButton("Scania Lift Bed");
     JButton lowerBedButton = new JButton("Lower Lift Bed");
+    JButton addCarButton = new JButton("Add a Car");            //nya knappar
+    JButton removeCarButton = new JButton("Remove Last Car");
+    
 
     JButton startButton = new JButton("Start all cars");
     JButton stopButton = new JButton("Stop all cars");
@@ -77,7 +78,7 @@ public class CarView extends JFrame implements ControllerListener {
 
         this.add(gasPanel); //adding gasPanel
 
-        controlPanel.setLayout(new GridLayout(2,4)); //2 rows, 4 columns
+        controlPanel.setLayout(new GridLayout(2,5)); //2 rows, 5 columns
 
         controlPanel.add(gasButton, 0);
         controlPanel.add(turboOnButton, 1);
@@ -85,6 +86,8 @@ public class CarView extends JFrame implements ControllerListener {
         controlPanel.add(brakeButton, 3);
         controlPanel.add(turboOffButton, 4);
         controlPanel.add(lowerBedButton, 5); //buttons
+        controlPanel.add(addCarButton,6 );
+        controlPanel.add(removeCarButton,7);
         controlPanel.setPreferredSize(new Dimension((X/2)+4, 200)); //setting size
         this.add(controlPanel);
         controlPanel.setBackground(Color.CYAN);
@@ -115,6 +118,9 @@ public class CarView extends JFrame implements ControllerListener {
 
         liftBedButton.addActionListener(e -> carC.liftBed());
         lowerBedButton.addActionListener(e -> carC.lowerBed());
+
+        addCarButton.addActionListener(e -> carC.addRandomCar());
+        removeCarButton.addActionListener(e -> carC.removeLastCar());
 
 
         // Make the frame pack all it's components by respecting the sizes if possible.
